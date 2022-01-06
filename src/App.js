@@ -1,25 +1,46 @@
-import logo from './logo.svg';
 import './App.css';
+import React from 'react';
+import { useState , useReducer} from 'react';
+
+import Sidebar from './Sidebar';
+import Chat from './Chat';
+import Newchat from './Newchat';
+
+import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
+import Login from './Login';
+
+import { initialState, reducer} from './reducer';
+
+export const StateContext = React.createContext();
+export const DispatchContext = React.createContext();
 
 function App() {
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+  
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
-
+    <StateContext.Provider value = {state}>
+    <DispatchContext.Provider value = {dispatch}>
+      <div className="app">
+      {isUserLoggedIn?
+        (<div className="app__container">
+          <Router>
+          <Sidebar />
+            <Switch>
+              <Route path="/rooms/:roomId">
+                <Chat/>
+              </Route>
+              <Route path = "/">
+                <Newchat />
+              </Route>
+            </Switch>
+          </Router>
+        </div>):
+        <Login setMethod = {setIsUserLoggedIn} />
+        }
+      </div>
+      </DispatchContext.Provider>
+    </StateContext.Provider>
+    )
+  }
 export default App;
