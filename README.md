@@ -1,4 +1,4 @@
-# clone-whatsapp
+# chat-room
 
 The application is built using react where you can create chatrooms and can communicate with any individual globally.
 This application includes a google authentication support.
